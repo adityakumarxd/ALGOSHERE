@@ -1,0 +1,105 @@
+// QR Code Generator
+const qrCode = new QRCode(document.getElementById('qrcode'), {
+  text: 'https://example.com/ticket/123',
+  width: 128,
+  height: 128
+});
+
+// Book Now Button Functionality
+const bookButtons = document.querySelectorAll('.event-card button');
+bookButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    alert('Ticket booked successfully!');
+  });
+});
+
+// Sidebar Toggle Functionality
+const sidebarToggle = document.getElementById('sidebar-toggle');
+const sidebar = document.querySelector('.sidebar');
+const mainContent = document.querySelector('.main-content');
+
+sidebarToggle.addEventListener('click', () => {
+  sidebar.classList.toggle('open');
+  mainContent.classList.toggle('sidebar-open'); // Add this line
+});
+
+// Sidebar Close Button Functionality
+const sidebarClose = document.getElementById('sidebar-close');
+
+sidebarClose.addEventListener('click', () => {
+  sidebar.classList.remove('open');
+  mainContent.classList.remove('sidebar-open'); // Add this line
+});
+
+// Function to switch between sections
+function showSection(sectionId) {
+  // Hide all sections
+  document.querySelectorAll('.content-section').forEach(section => {
+    section.classList.remove('active');
+  });
+
+  // Show the selected section
+  document.getElementById(sectionId).classList.add('active');
+}
+
+// Sidebar Links Event Listeners
+document.getElementById('home-link').addEventListener('click', () => {
+  showSection('home-section');
+});
+
+document.getElementById('events-link').addEventListener('click', () => {
+  showSection('events-section');
+});
+
+document.getElementById('tickets-link').addEventListener('click', () => {
+  showSection('tickets-section');
+});
+
+document.getElementById('profile-link').addEventListener('click', () => {
+  showSection('profile-section');
+});
+
+document.getElementById('support-link').addEventListener('click', () => {
+  showSection('support-section');
+});
+
+// Fetch User Data and Top Artists
+document.addEventListener("DOMContentLoaded", async () => {
+  try {
+    // Fetch User Data
+    const userRes = await fetch("/debug", { credentials: "include" });
+    const userData = await userRes.json();
+
+    if (!userData.user) {
+      window.location.href = "/"; // Redirect to home if no user data
+      return;
+    }
+
+    // Update User Profile Section
+    const { profile } = userData.user;
+    document.getElementById("username").innerText = `Welcome, ${profile.displayName || "User"}`;
+    document.getElementById("user-email").innerText = profile.emails?.[0] || "Gold Member";
+    document.getElementById("user-avatar").src = profile.photos?.[0] || "images/52eabf633ca6414e60a7677b0b917d92-male-avatar-maker.webp";
+
+    // Fetch Top Artists
+    const artistRes = await fetch("/api/spotify/top-artists", { credentials: "include" });
+    const artistData = await artistRes.json();
+
+    const artistList = document.getElementById("top-artists");
+    if (artistData.items) {
+      artistData.items.forEach(artist => {
+        const artistItem = document.createElement("div");
+        artistItem.classList.add("event-card");
+        artistItem.innerHTML = `
+          <img src="${artist.images[0]?.url}" alt="${artist.name}">
+          <h4>${artist.name}</h4>
+          <p>Popularity: ${artist.popularity}</p>
+        `;
+        artistList.appendChild(artistItem);
+      });
+    }
+
+  } catch (err) {
+    console.error("Error fetching data:", err);
+  }
+});

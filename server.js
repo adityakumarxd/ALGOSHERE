@@ -83,7 +83,7 @@ app.get("/debug", (req, res) => {
   res.json({ user: req.user || "No user in session" });
 });
 
-// Protected API Route
+// Fetch Top Artists
 app.get("/api/spotify/top-artists", async (req, res) => {
   if (!req.user || !req.user.accessToken) {
     return res.status(401).json({ error: "Unauthorized" });
@@ -93,10 +93,53 @@ app.get("/api/spotify/top-artists", async (req, res) => {
     const response = await axios.get("https://api.spotify.com/v1/me/top/artists", {
       headers: { Authorization: `Bearer ${req.user.accessToken}` },
     });
-
     res.json(response.data);
   } catch (error) {
-    res.status(500).json({ error: "Failed to fetch data" });
+    res.status(500).json({ error: "Failed to fetch top artists" });
+  }
+});
+
+// Fetch Top Tracks
+app.get("/api/spotify/top-tracks", async (req, res) => {
+  if (!req.user || !req.user.accessToken) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  try {
+    const response = await axios.get("https://api.spotify.com/v1/me/top/tracks", {
+      headers: { Authorization: `Bearer ${req.user.accessToken}` },
+    });
+    res.json(response.data);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch top tracks" });
+  }
+});
+
+// Fetch Upcoming Events (Example: Using a mock API)
+app.get("/api/spotify/upcoming-events", async (req, res) => {
+  if (!req.user || !req.user.accessToken) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  try {
+    // Mock data for upcoming events (replace with actual API call)
+    const mockEvents = [
+      {
+        name: "Concert 1",
+        date: "25th Oct 2023",
+        location: "Mumbai",
+        image: "https://example.com/concert1.jpg",
+      },
+      {
+        name: "Concert 2",
+        date: "30th Oct 2023",
+        location: "Delhi",
+        image: "https://example.com/concert2.jpg",
+      },
+    ];
+    res.json(mockEvents);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch upcoming events" });
   }
 });
 

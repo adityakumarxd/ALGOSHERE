@@ -63,7 +63,7 @@ document.getElementById('support-link').addEventListener('click', () => {
   showSection('support-section');
 });
 
-// Fetch User Data and Top Artists
+// Fetch User Data and Spotify Data
 document.addEventListener("DOMContentLoaded", async () => {
   try {
     // Fetch User Data
@@ -96,6 +96,43 @@ document.addEventListener("DOMContentLoaded", async () => {
           <p>Popularity: ${artist.popularity}</p>
         `;
         artistList.appendChild(artistItem);
+      });
+    }
+
+    // Fetch Top Tracks
+    const trackRes = await fetch("/api/spotify/top-tracks", { credentials: "include" });
+    const trackData = await trackRes.json();
+
+    const trackList = document.getElementById("top-tracks");
+    if (trackData.items) {
+      trackData.items.forEach(track => {
+        const trackItem = document.createElement("div");
+        trackItem.classList.add("event-card");
+        trackItem.innerHTML = `
+          <img src="${track.album.images[0]?.url}" alt="${track.name}">
+          <h4>${track.name}</h4>
+          <p>Artist: ${track.artists[0]?.name}</p>
+        `;
+        trackList.appendChild(trackItem);
+      });
+    }
+
+    // Fetch Upcoming Events
+    const eventRes = await fetch("/api/spotify/upcoming-events", { credentials: "include" });
+    const eventData = await eventRes.json();
+
+    const eventList = document.getElementById("upcoming-events");
+    if (eventData) {
+      eventData.forEach(event => {
+        const eventItem = document.createElement("div");
+        eventItem.classList.add("event-card");
+        eventItem.innerHTML = `
+          <img src="${event.image}" alt="${event.name}">
+          <h4>${event.name}</h4>
+          <p>Date: ${event.date}</p>
+          <p>Location: ${event.location}</p>
+        `;
+        eventList.appendChild(eventItem);
       });
     }
 

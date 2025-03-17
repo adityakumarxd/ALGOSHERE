@@ -8,13 +8,13 @@ const cors = require("cors");
 const path = require("path");
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 6969;
 
 // Serve static files from the "public" folder
 app.use(express.static(path.join(__dirname, "public")));
 
 // CORS Setup - Allowing requests from your front-end (adjust the URL accordingly)
-app.use(cors({ origin: "http://localhost:5000", credentials: true }));
+app.use(cors({ origin: "http://localhost:6969", credentials: true }));
 
 // Session Setup
 app.use(
@@ -35,7 +35,7 @@ passport.use(
     {
       clientID: process.env.SPOTIFY_CLIENT_ID,
       clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
-      callbackURL: "http://localhost:5000/auth/spotify/callback",
+      callbackURL: "http://localhost:6969/auth/spotify/callback",
     },
     (accessToken, refreshToken, expires_in, profile, done) => {
       console.log("Authenticated User:", profile.displayName); // Debugging

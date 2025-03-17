@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 5000;
 // Serve static files from the "public" folder
 app.use(express.static(path.join(__dirname, "public")));
 
-// CORS Setup
+// CORS Setup - Allowing requests from your front-end (adjust the URL accordingly)
 app.use(cors({ origin: "http://localhost:5000", credentials: true }));
 
 // Session Setup
@@ -122,7 +122,6 @@ app.get("/api/spotify/upcoming-events", async (req, res) => {
   }
 
   try {
-    // Mock data for upcoming events (replace with actual API call)
     const mockEvents = [
       {
         name: "Concert 1",
@@ -145,7 +144,11 @@ app.get("/api/spotify/upcoming-events", async (req, res) => {
 
 // Serve Dashboard
 app.get("/dashboard", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
+  if (req.isAuthenticated()) {
+    res.sendFile(path.join(__dirname, "public", "index.html"));
+  } else {
+    res.redirect("/auth/spotify"); // Redirect to login if not authenticated
+  }
 });
 
 // Start Server

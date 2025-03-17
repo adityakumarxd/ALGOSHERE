@@ -112,7 +112,7 @@ body {
 }
 
 .main-content.sidebar-open {
-  margin-left: 450px; /* Adjust this value based on sidebar width */
+  margin-left: 400px; /* Adjust this value based on sidebar width */
 }
 
 /* Content Sections */

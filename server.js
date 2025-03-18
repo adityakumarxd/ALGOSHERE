@@ -6,6 +6,7 @@ const session = require("express-session");
 const axios = require("axios");
 const cors = require("cors");
 const path = require("path");
+const mongoose = require("mongoose");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -150,6 +151,31 @@ app.get("/dashboard", (req, res) => {
     res.redirect("/auth/spotify"); // Redirect to login if not authenticated
   }
 });
+
+// Connect to MongoDB
+mongoose.connect('mongodb://localhost:27017/ticket_platform', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+.then(() => console.log('Connected to MongoDB'))
+.catch(err => console.error('MongoDB connection error', err));
+
+// User Schema and Model
+const userSchema = new mongoose.Schema({
+  spotify_id: { type: String, required: true, unique: true },
+  display_name: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  top_artists: { type: Array, default: [] },
+  top_tracks: { type: Array, default: [] },
+  fan_score: { type: Number, default: 0 },
+  created_at: { type: Date, default: Date.now },
+});
+
+const User = mongoose.model('User', userSchema);
+
+
+
+
 
 // Start Server
 app.listen(PORT, () => {

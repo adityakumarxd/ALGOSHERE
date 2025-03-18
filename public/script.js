@@ -98,8 +98,32 @@ document.addEventListener("DOMContentLoaded", async () => {
         artistList.appendChild(artistItem);
       });
     }
-
-    // Fetch Top Tracks
+    
+    const saveUserData = async (spotify_id, email, top_artists, top_tracks) => {
+      try {
+          const response = await fetch('http://localhost:5000/save-user-data', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ spotify_id, email, top_artists, top_tracks }),
+          });
+  
+          const data = await response.json();
+          console.log('User data saved:', data);
+      } catch (err) {
+          console.error('Error saving user data:', err);
+      }
+  };
+  
+  // Call this function after fetching user data from Spotify
+  const spotify_id = 'user_spotify_id'; // Replace with actual Spotify ID
+  const email = 'user_email'; // Replace with actual email
+  const top_artists = [/* Array of top artists */];
+  const top_tracks = [/* Array of top tracks */];
+  
+  saveUserData(spotify_id, email, top_artists, top_tracks);
+    
+  
+  // Fetch Top Tracks
     const trackRes = await fetch("/api/spotify/top-tracks", { credentials: "include" });
     const trackData = await trackRes.json();
 

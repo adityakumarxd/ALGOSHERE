@@ -212,6 +212,19 @@ const userSchema = new mongoose.Schema({
 const User = mongoose.model('User', userSchema);
 
 
+// Route to fetch all events
+app.get('/api/events', async (req, res) => {
+  try {
+    const events = await Event.find({});
+    res.json(events);
+  } catch (err) {
+    res.status(500).json({ message: 'Error fetching events', error: err });
+  }
+});
+
+
+
+
 
 
 
